@@ -31,24 +31,69 @@
         $username = $_POST['username'];
         $role = $_POST['role'];
 
-        if (isset($password) and isset($confPassword)) {
+        include('database/db_connection.php');
 
-            if ($password != $confPassword) {
-                echo "<p style='color: red; font-size: small; text-align: center' > 
+        try {
+            $UserExists = $conn->prepare("select username from php_db.user where username = :username");
+
+            $UserExists->bindParam(':username', $username);
+
+            $UserExists->execute();
+
+            $EmailExists = $conn->prepare('select email from php_db.user where email = :email');
+            $EmailExists->bindParam(':email', $email);
+            $EmailExists->execute();
+
+        } catch (PDOException $e) {
+
+            echo 'Something bad happened';
+        }
+
+        if ($password != $confPassword) {
+
+            echo "<p style='color: red; font-size: small; text-align: center' > 
                             Oops! Password did not match! Try again.
                       </p> ";
-            } else {
-                require('database/db_connection.php');
 
-                $hashedPassword = password_hash($password,PASSWORD_DEFAULT);
+        } elseif ($UserExists->rowCount() > 0) {
+
+            echo "<p style='color: red; font-size: small; text-align: center' > 
+                            The username already exist.
+                      </p> ";
+
+        } elseif ($EmailExists->rowCount() > 0) {
+
+            echo "<p style='color: red; font-size: small; text-align: center' > 
+                            The email already exist.
+                      </p> ";
+
+        } else {
+
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            try {
 
                 $stm = $conn->prepare("insert into php_db.user(username, email, role, password)
-                    values ($username, $email, $role, $hashedPassword)");
+                    values (:username, :email, :role, :hashedPassword)");
+
+
+                $stm->bindParam(':username', $username);
+                $stm->bindParam(':email', $email);
+                $stm->bindParam(':role', $role);
+                $stm->bindParam(':hashedPassword', $hashedPassword);
+
+                $stm->execute();
 
                 echo " <h3> The sign up was successful now you can log in </h3>";
                 exit();
+
+            } catch (PDOException $e) {
+
+                echo 'Something bad happened';
             }
+
         }
+
     }
     ?>
     <h3>Sign Up Here</h3>
@@ -63,7 +108,8 @@
            value="<?php if (isset($username)) {
                echo $username;
            } ?>">
-    <label for="password" style="font-size: small">Password: The password mast contain one upper case and one lower case
+    <label for="password" style="font-size: small; color: #ff512f">Password: The password mast contain one upper case
+        and one lower case
         character
         a symbol and a number. The length mast be more than 10 characters.</label>
     <input type="password" name="password" placeholder="Password" id="password" required minlength="10"
