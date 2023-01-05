@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<?php
+session_start();
+?>
 <html lang="en">
 <head>
     <title>Log in</title>
@@ -17,22 +20,53 @@
     <div class="shape"></div>
     <div class="shape"></div>
 </div>
-<form>
+
+
+<form method="post">
     <h3>Login Here</h3>
 
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $username = filter_input(INPUT_POST, 'username');
+        $password = filter_input(INPUT_POST, 'password');
+
+        include('database/db_connection.php');
+
+        try {
+            $log = $conn->prepare("select password, role  from php_db.user where username = :username");
+            $log->bindParam(':username', $username);
+            $log->execute();
+
+            $row = $log->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($log->rowCount() > 0 and password_verify($password, $row[0] ['password'])) {
+
+                $_SESSION['username'] = $username;
+                $_SESSION['role'] = $row[0]['role'];
+                $_SESSION['time'] = time();
+
+                header("Location: template.php");
+
+            } else {
+                echo "<p style='color: red; font-size: small; text-align: center' > 
+                            The username or password are incorrect.
+                      </p> ";
+            }
+        } catch (PDOException $e) {
+
+            echo 'Something bad happened';
+        }
+    }
+    ?>
+
     <label for="username">Username</label>
-    <input type="text" placeholder="Username or email" id="username" required>
+    <input type="text" name="username" placeholder="Username or email" id="username" required>
     <label for="password">Password</label>
-    <input type="password" placeholder="Password" id="password" required>
+    <input type="password" name="password" placeholder="Password" id="password" required>
 
     <button>Log In</button>
 
 </form>
 </body>
 </html>
-<?php
-$user = filter_input(INPUT_POST, 'username');
-$pass = filter_input(INPUT_POST, 'password');
 
-
-?>

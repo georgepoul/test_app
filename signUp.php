@@ -35,9 +35,7 @@
 
         try {
             $UserExists = $conn->prepare("select username from php_db.user where username = :username");
-
             $UserExists->bindParam(':username', $username);
-
             $UserExists->execute();
 
             $EmailExists = $conn->prepare('select email from php_db.user where email = :email');
@@ -85,6 +83,7 @@
                 $stm->execute();
 
                 echo " <h3> The sign up was successful now you can log in </h3>";
+                $conn = null;
                 exit();
 
             } catch (PDOException $e) {

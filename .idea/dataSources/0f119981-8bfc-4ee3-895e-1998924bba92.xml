@@ -1149,7 +1149,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Position>4</Position>
     </column>
     <column id="326" parent="303" name="password">
-      <DasType>varchar(40)|0s</DasType>
+      <DasType>varchar(120)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
