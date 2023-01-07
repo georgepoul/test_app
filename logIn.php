@@ -51,7 +51,7 @@ session_start();
 
                 }else{
 
-                    header("Location: Student.php");
+                    header("Location: student/student.php");
                 }
                 exit();
 

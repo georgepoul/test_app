@@ -1,6 +1,6 @@
 <?php
 session_start();
-if ($_SESSION['role'] == 'Teacher') {
+if ($_SESSION['role'] == 'Student') {
     ?>
 
     <!DOCTYPE html>
@@ -13,7 +13,7 @@ if ($_SESSION['role'] == 'Teacher') {
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
 
         <?php
-        require('../templates/teacherHeader.inc.php');
+        require('../templates/studentHeader.inc.php');
         ?>
 
     </head>
@@ -26,8 +26,8 @@ if ($_SESSION['role'] == 'Teacher') {
         <h3 style="text-align: center">Hello Mr/Ms <?php echo $_SESSION['username']; ?> </h3>
         <p style="text-align: left">In our page you can: </p>
         <ul>
-            <li>See statistics based on course, degree of difficulty and question</li>
-            <li>Create delete courses and questions</li>
+            <li>See statistics about your performance</li>
+            <li>Test yourself with a Test in a specific course</li>
         </ul>
     </form>
     </body>
