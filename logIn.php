@@ -45,7 +45,15 @@ session_start();
                 $_SESSION['role'] = $row[0]['role'];
                 $_SESSION['time'] = time();
 
-                header("Location: template.php");
+                if ($_SESSION['role'] == 'Teacher'){
+
+                    header("Location: teacher/teacher.php");
+
+                }else{
+
+                    header("Location: Student.php");
+                }
+                exit();
 
             } else {
                 echo "<p style='color: red; font-size: small; text-align: center' > 

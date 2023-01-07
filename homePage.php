@@ -20,9 +20,12 @@
 <form>
     <h3>Welcome to our page</h3>
     <h3 style="text-align: center">This page created for Teachers and Students</h3>
-    <p style="text-align: left">Teachers can create subjects, test and can see Statistics</p>
-    <p style="text-align: left">Students can solve test in any Subject and can see Statistics about their performance</p>
+    <ul>
+        <li>Teachers can create courses, test and can see Statistics</li>
+        <li>Students can solve test in any Subject and can see Statistics about their performance</li>
+    </ul>
     <p style="text-align: left">Please Log In or Sign Up to create a Test or to Test your Knowledge</p>
+
 </form>
 </body>
 </html>
