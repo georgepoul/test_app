@@ -76,7 +76,7 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
                         <?php echo $row[$i]['Question'] ?>
                     </td>
                     <td>
-                        <input type="submit" name="edit" value="edit"/>
+                        <input type="submit" name="edit" value="edit" formaction="/sphy140/project%20php/teacher/edit.php"/>
 
                     </td>
                     <td>

@@ -46,11 +46,8 @@ if ($_SESSION['role'] == 'Teacher') {
 
             $Que = $conn->prepare("insert into php_db.Question (Question, Right_Answer_ID, Difficulty_ID)
                 values (:question, (select Right_Answer.Right_Answer_ID from php_db.Right_Answer where Right_Answer = :Right), :diff)");
-
-            $var =  'answer' . (string)$_POST['right_answer'];
-
             $Que->bindParam(':question', $_POST['question']);
-            $Que->bindParam(':Right', $_POST[$var]);
+            $Que->bindParam(':Right', $_POST['right_answer']);
             $Que->bindParam(':diff', $_POST['difficulty']);
 
             $Que->execute();
