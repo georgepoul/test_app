@@ -30,7 +30,7 @@ if ($_SESSION['role'] == 'Teacher') {
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form method="post">
+    <form method="post" action="">
 
 
         <p style="text-align: left">The Questions for the course <?php echo $_SESSION['lesson'] ?> are:</p>
@@ -44,6 +44,7 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
             $log->execute();
 
             $row = $log->fetchAll(PDO::FETCH_ASSOC);
+            $_SESSION['row']= $row;
 
 
         } catch (PDOException $e) {
@@ -79,7 +80,7 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
 
                     </td>
                     <td>
-                        <input type="submit" name="delete" value="delete"/>
+                        <input type="submit" name="delete" value="delete" formaction="/sphy140/project%20php/teacher/delete.php"/>
                     </td>
                 </tr>
                 <?php
@@ -89,7 +90,7 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
 
             <tr>
                 <td>
-                    <button name="add" value="add">Add a new Question</button>
+                    <button name="add" value="add" formaction="/sphy140/project%20php/teacher/add.php">Add a new Question</button>
                 </td>
 
             </tr>
@@ -110,12 +111,9 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
                 }
             </script>
             <?php
-
             if (isset($_POST['edit'])) {
                 echo $_SESSION['id'];
 
-            } elseif (isset($_POST['delete'])) {
-                delete($row);
             }
         }
 
@@ -130,43 +128,5 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
 } else {
     echo '<h4>401, Unauthorized</h4>';
 }
-
-function delete($row)
-{
-
-    try {
-
-        include('../database/db_connection.php');
-
-        $idConf = $conn->prepare("select Question.Question_ID as id from php_db.Question  where php_db.Question.Question = :question");
-
-        $idConf->bindParam(':question', $row[$_SESSION['id']]['Question']);
-        $idConf->execute();
-
-        $row = $idConf->fetchAll(PDO::FETCH_ASSOC);
-
-        $_SESSION['id'] = null;
-
-        $del1 = $conn->prepare("delete from php_db.Right_Answer where Right_Answer_ID = (select Question.Right_Answer_ID from php_db.Question where Question_ID = :id)");
-        $del1->bindParam(':id', $row[0]['id']);
-
-        $del1->execute();
-
-        $del = $conn->prepare("delete Question, Question_Lesson, Answer from php_db.Question inner join php_db.Question_Lesson 
-        on Question.Question_ID = Question_Lesson.Question_ID inner join php_db.Answer on Question.Right_Answer_ID = Answer_ID where Question.Question_ID = :id");
-
-        $del->bindParam(':id', $row[0]['id']);
-
-        $del->execute();
-
-
-    } catch (PDOException $e) {
-        print_r($e->getMessage());
-    }
-
-    header("Location: questions.php");
-
-}
-
 ?>
 
