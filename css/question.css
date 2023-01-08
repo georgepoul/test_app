@@ -63,7 +63,7 @@ form *{
 form h3{
     font-size: 32px;
     font-weight: 500;
-    line-height: 42px;
+    line-height: 0px;
     text-align: center;
     color: white;
 }
@@ -71,7 +71,6 @@ form h3{
 button{
     background-color: #ffffff;
     color: #080710;
-
     font-size: 18px;
     border-radius: 5px;
     cursor: pointer;
