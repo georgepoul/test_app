@@ -70,13 +70,13 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
 
             for ($i = 0; $i < $log->rowCount(); $i++) {
                 ?>
-                <tr onclick="<?php $_SESSION['id'] = $_COOKIE['id'] - 1;
-                echo 'myFunction(this)' ?>">
+                <tr onclick="<?php echo 'myFunction(this)'; $_SESSION['id'] = $_COOKIE['id'] - 1;
+                 ?>">
                     <td>
                         <?php echo $row[$i]['Question'] ?>
                     </td>
                     <td>
-                        <input type="submit" name="edit" value="edit" formaction="/sphy140/project%20php/teacher/edit.php"/>
+                        <input type="submit" name="edit" value="edit" />
 
                     </td>
                     <td>
@@ -96,7 +96,9 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
             </tr>
 
         </table>
+        <script src="myFunction.js" >
 
+        </script>
         <?php
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -104,15 +106,13 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
             $_COOKIE['id'] = null;
 
             ?>
-            <script>
-                function myFunction(x) {
-                    document.cookie = 'id = ' + x.rowIndex;
-                    console.log(document.cookie);
-                }
-            </script>
+
             <?php
             if (isset($_POST['edit'])) {
                 echo $_SESSION['id'];
+
+
+                header("Location: edit.php");
 
             }
         }
@@ -120,6 +120,7 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
         ?>
 
     </form>
+
     </body>
     </html>
 

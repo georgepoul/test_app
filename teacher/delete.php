@@ -20,7 +20,6 @@ try {
 
         $del1->execute();
 
-        echo 'ranswer ok';
 
 
         $del = $conn->prepare("delete Question, Question_Lesson, Answer from php_db.Question inner join php_db.Question_Lesson

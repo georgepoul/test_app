@@ -43,11 +43,17 @@ if ($_SESSION['role'] == 'Teacher') {
             $RAns->bindParam(':Right', $_POST[$var]);
             $RAns->execute();
 
+            $RAnsId = $conn->prepare("select max(Right_Answer_ID) from  php_db.Right_Answer");
+            $RAnsId->execute();
+
+            $raId = $RAnsId->fetchAll(PDO::FETCH_ASSOC);
+
+
 
             $Que = $conn->prepare("insert into php_db.Question (Question, Right_Answer_ID, Difficulty_ID)
-                values (:question, (select Right_Answer.Right_Answer_ID from php_db.Right_Answer where Right_Answer = :Right), :diff)");
+                values (:question, :Right, :diff)");
             $Que->bindParam(':question', $_POST['question']);
-            $Que->bindParam(':Right', $_POST['right_answer']);
+            $Que->bindParam(':Right', $raId[0]['max(Right_Answer_ID)']);
             $Que->bindParam(':diff', $_POST['difficulty']);
 
             $Que->execute();
@@ -75,9 +81,7 @@ if ($_SESSION['role'] == 'Teacher') {
 
             $queAns->execute();
 
-
-
-            echo '<h3>Your Answer saved Successfully!</h3>';
+            echo '<h3>Your Question saved Successfully!</h3>';
             ?>
             <button><a href="add.php" style="color: white">Add a new question</a></button>
             <button><a href="questions.php" style="color: white">See all the questions for the
@@ -119,8 +123,8 @@ if ($_SESSION['role'] == 'Teacher') {
             </option>
         </select>
 
-        <label for="nm">Number of Answers:</label>
-        <select type="text" id="nm" name="nm">>
+        <label <?php if (isset($_POST['nm'])) echo 'hidden'?> for="nm">Number of Answers:</label>
+        <select <?php if (isset($_POST['nm'])) echo 'hidden'?> type="text" id="nm" name="nm">>
             <option value="" disabled selected hidden>Please choose how many answers do you wont to add in your
                 question
             </option>
