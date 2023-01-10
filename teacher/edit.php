@@ -11,6 +11,8 @@ if ($_SESSION['role'] == 'Teacher') {
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link rel="stylesheet" href="../https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 
         <?php
         require('../templates/teacherHeader.inc.php');
@@ -35,6 +37,8 @@ if ($_SESSION['role'] == 'Teacher') {
 
         $row = $idConf->fetchAll(PDO::FETCH_ASSOC);
 
+        $_SESSION['qId'] = $row[0]['id'];
+
 
         $stm1 = $conn->prepare("select Answer  from php_db.Answer where Question_ID = :id");
         $stm1->bindParam(':id', $row[0]['id']);
@@ -53,7 +57,7 @@ if ($_SESSION['role'] == 'Teacher') {
 
         $rowQuestion = $stm->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        echo 'Something bad happen';
+        echo 'Something bad happened';
     }
     ?>
 
@@ -79,44 +83,34 @@ if ($_SESSION['role'] == 'Teacher') {
 
         }
 
-        $var = 'answer' . $_POST['right_answer'];
+        if (isset($_POST['answer'])) {
 
-        if (isset($_POST[$var])) {
-            $updRA = $conn->prepare("update php_db.Right_Answer inner join php_db.Question on Question.Right_Answer_ID = Right_Answer.Right_Answer_ID
-             set Right_Answer = :rightAn where Question_ID = :id");
+            $answers = $_POST['answer'];
 
-            $updRA->bindParam(':rightAn', $_POST[$var]);
+            $updRA = $conn->prepare("delete from php_db.Answer where Question_ID = :id");
+
             $updRA->bindParam(':id', $row[0]['id']);
 
             $updRA->execute();
 
-        }
+            $AnswerId = $updRA->fetchAll(PDO::FETCH_ASSOC);
 
-        for ($w = 1; $w <= $stm1->rowCount(); $w++) {
 
-            $var = 'answer' . $w;
+            for ($i = 0; $i < sizeof($answers); $i++) {
 
-            if (isset($_POST[$var])) {
 
-                $updRA = $conn->prepare("update php_db.Answer set Answer = :answer where Question_ID = :id and Answer = :old");
+                    $updRA = $conn->prepare("insert into php_db.Answer (Answer,Question_ID) values(:answer, :id) ");
 
-                $updRA->bindParam(':answer', $_POST[$var]);
-                $updRA->bindParam(':id', $row[0]['id']);
-                $updRA->bindParam(':old', $rowAnswers[$w - 1]['Answer']);
+                    $updRA->bindParam(':id', $row[0]['id']);
+                    $updRA->bindParam(':answer', $answers[$i]);
 
-                $updRA->execute();
+                    $updRA->execute();
+
             }
+
+            header("Location: edit2.php");
+
         }
-
-        echo '<h3>Your Question edited Successfully!</h3>';
-        ?>
-        <button><a href="questions.php" style="color: white">See all the questions for the
-                course: <?php echo $_SESSION['lesson'] ?></a></button>
-    </form>
-    <?php
-
-    exit();
-
     } catch (PDOException $e) {
         echo 'Something bad happened';
     }
@@ -125,53 +119,74 @@ if ($_SESSION['role'] == 'Teacher') {
     ?>
 
     <label for="question">Question:</label>
-    <input type="text" name="question" placeholder="Wright your Question here" id="question" required
+    <input style="color: white" type="text" name="question" placeholder="Wright your Question here" id="question"
+           required
            value="<?php echo $rowQuestion[0]['Question']; ?>">
 
     <label for="difficulty">Difficulty</label>
-    <select type="text" name="difficulty" id="difficulty" required>
-        <option value="" disabled selected hidden>Please choose the Questions difficulty</option>
-        <option value="1" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "easy")) echo 'selected'; ?>>
+    <select style="color: white" type="text" name="difficulty" id="difficulty" required>
+        <option style="color: white" value="" disabled selected hidden>Please choose the Questions difficulty</option>
+        <option style="color: white"
+                value="1" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "easy")) echo 'selected'; ?>>
             easy
         </option>
-        <option value="2" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "medium")) echo 'selected'; ?>>
+        <option style="color: white"
+                value="2" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "medium")) echo 'selected'; ?>>
             medium
         </option>
-        <option value="3" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "hard")) echo 'selected'; ?>>
+        <option style="color: white"
+                value="3" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "hard")) echo 'selected'; ?>>
             hard
         </option>
     </select>
 
-    <?php
-    for ($q = 1; $q <= $stm1->rowCount(); $q++) {
 
-        echo '<label for="answer">Answer ', $q, '</label>';
-        echo '<input type="text" required name="answer', $q, '" value="', $rowAnswers[$q - 1]['Answer'], '">';
+    <div class="table-responsive">
+        <table style="width: 1125px" class="table table-bordered" id="dynamic_field">
+            <?php
+            echo '<label for="answer">Answers</label>';
+            for ($q = 1; $q <= $stm1->rowCount(); $q++) {
+                echo '<tr id="row', $q, '">';
 
+                echo '<td hidden="hidden">', $q, '</td><td ><input style = "color: white" type = "text" name="answer[]', $q, '" placeholder = "Add your new question"
+                       value="', $rowAnswers[$q - 1]['Answer'], '"></td >';
 
-    }
+                if (!isset($q) or $q == 1) {
+                    echo '<td style="align-content: center; vertical-align: middle"><button style="vertical-align: middle" type="button" name="add" id="add" class="btn btn-success">Add More</button></td>';
+                } else {
 
-
-    ?>
-
-    <label for="right_answer">Right Answer is the Answer :</label>
-    <select type="text" name="right_answer" id="right_answer" required>
-        <?php
-
-        for ($j = 1; $j <= $stm1->rowCount(); $j++) {
-            $selected = "";
-            if (!strcmp($rowAnswers[$j - 1]['Answer'], $rowQuestion[0]['Right_Answer'])) {
-                $selected = 'selected';
+                    echo '<td style="align-content: center; vertical-align: middle"><button style="vertical-align: middle" type="button" name="remove" id="', $q, '"', ' class="btn btn-danger btn_remove">X</button></td>';
+                }
+                echo '</tr>';
             }
+            ?>
 
-            echo '<option value="', $j, '" ', $selected, '>', $j, ' </option>';
-        }
-        ?>
-    </select>
-    <button type="submit">Submit</button>
+        </table>
+
+        <input style="vertical-align: middle" type="submit" name="submit" id="submit" class="btn btn-info"
+               value="Next"/>
+    </div>
+
     </form>
     </body>
     </html>
+
+
+    <script>
+        $(document).ready(function () {
+            var i = <?php echo $q - 1 ?>;
+            $('#add').click(function () {
+                i++;
+                $('#dynamic_field').append('<tr style="align-content: center" id="row' + i + '"><td hidden="hidden">' + i + '</td><td style="align-content: center"><input type="text" name="answer[]" placeholder="Add your new question" class="form-control name_list" required/></td><td style="vertical-align: middle"><button style="vertical-align: middle" type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');
+
+            });
+
+            $(document).on('click', '.btn_remove', function () {
+                var button_id = $(this).attr("id");
+                $('#row' + button_id + '').remove();
+            });
+        });
+    </script>
 
     <?php
 } else {

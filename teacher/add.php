@@ -129,7 +129,7 @@ if ($_SESSION['role'] == 'Teacher') {
                 question
             </option>
             <?php
-            for ($i = 1; $i <= 10; $i++) {
+            for ($i = 2; $i <= 10; $i++) {
                 echo '<option value="', $i, '">', $i, ' </option>';
             }
             ?>
