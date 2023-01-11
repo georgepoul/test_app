@@ -4,9 +4,11 @@ include('../database/db_connection.php');
 
 
 try {
+    $rowId = $_GET['id'] -1;
+
     $idConf = $conn->prepare("select Question.Question_ID as id from php_db.Question  where php_db.Question.Question = :question");
 
-    $idConf->bindParam(':question', $_SESSION['row'][$_SESSION['id']]['Question']);
+    $idConf->bindParam(':question', $_SESSION['row'][$rowId]['Question']);
     $idConf->execute();
 
     $row = $idConf->fetchAll(PDO::FETCH_ASSOC);

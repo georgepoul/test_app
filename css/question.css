@@ -76,9 +76,14 @@ button{
     cursor: pointer;
 }
 table,td,th{
+    left: 55%;
+    right: 55%;
     border: 1px solid white;
     border-collapse: collapse;
     align-content: center;
     vertical-align: middle;
 
+}
+table{
+    width: auto;
 }

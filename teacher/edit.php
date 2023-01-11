@@ -16,6 +16,10 @@ if ($_SESSION['role'] == 'Teacher') {
 
         <?php
         require('../templates/teacherHeader.inc.php');
+
+        $rowId = $_GET['id'] - 1;
+
+        $_SESSION['rowId'] = $rowId;
         ?>
 
     </head>
@@ -31,7 +35,7 @@ if ($_SESSION['role'] == 'Teacher') {
     try {
         $idConf = $conn->prepare("select Question.Question_ID as id from php_db.Question  where php_db.Question.Question = :question");
 
-        $idConf->bindParam(':question', $_SESSION['row'][$_SESSION['id']]['Question']);
+        $idConf->bindParam(':question', $_SESSION['row'][$rowId]['Question']);
         $idConf->execute();
 
 
@@ -70,102 +74,102 @@ if ($_SESSION['role'] == 'Teacher') {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        try {
-        if (isset($_POST['question'])) {
-            $updQue = $conn->prepare("update php_db.Question 
+            try {
+                if (isset($_POST['question'])) {
+                    $updQue = $conn->prepare("update php_db.Question 
              set Question = :question, Difficulty_ID = :difficulty where Question_ID = :id");
 
-            $updQue->bindParam(':question', $_POST['question']);
-            $updQue->bindParam(':difficulty', $_POST['difficulty']);
-            $updQue->bindParam(':id', $row[0]['id']);
+                    $updQue->bindParam(':question', $_POST['question']);
+                    $updQue->bindParam(':difficulty', $_POST['difficulty']);
+                    $updQue->bindParam(':id', $row[0]['id']);
 
-            $updQue->execute();
+                    $updQue->execute();
 
-        }
+                }
 
-        if (isset($_POST['answer'])) {
+                if (isset($_POST['answer'])) {
 
-            $answers = $_POST['answer'];
+                    $answers = $_POST['answer'];
 
-            $updRA = $conn->prepare("delete from php_db.Answer where Question_ID = :id");
-
-            $updRA->bindParam(':id', $row[0]['id']);
-
-            $updRA->execute();
-
-            $AnswerId = $updRA->fetchAll(PDO::FETCH_ASSOC);
-
-
-            for ($i = 0; $i < sizeof($answers); $i++) {
-
-
-                    $updRA = $conn->prepare("insert into php_db.Answer (Answer,Question_ID) values(:answer, :id) ");
+                    $updRA = $conn->prepare("delete from php_db.Answer where Question_ID = :id");
 
                     $updRA->bindParam(':id', $row[0]['id']);
-                    $updRA->bindParam(':answer', $answers[$i]);
 
                     $updRA->execute();
 
+                    $AnswerId = $updRA->fetchAll(PDO::FETCH_ASSOC);
+
+
+                    for ($i = 0; $i < sizeof($answers); $i++) {
+
+
+                        $updRA = $conn->prepare("insert into php_db.Answer (Answer,Question_ID) values(:answer, :id) ");
+
+                        $updRA->bindParam(':id', $row[0]['id']);
+                        $updRA->bindParam(':answer', $answers[$i]);
+
+                        $updRA->execute();
+
+                    }
+
+                    header("Location: edit2.php");
+
+                }
+            } catch (PDOException $e) {
+                echo 'Something bad happened';
             }
-
-            header("Location: edit2.php");
-
         }
-    } catch (PDOException $e) {
-        echo 'Something bad happened';
-    }
-    }
 
-    ?>
+        ?>
 
-    <label for="question">Question:</label>
-    <input style="color: white" type="text" name="question" placeholder="Wright your Question here" id="question"
-           required
-           value="<?php echo $rowQuestion[0]['Question']; ?>">
+        <label for="question">Question:</label>
+        <input style="color: white" type="text" name="question" placeholder="Wright your Question here" id="question"
+               required
+               value="<?php echo $rowQuestion[0]['Question']; ?>">
 
-    <label for="difficulty">Difficulty</label>
-    <select style="color: white" type="text" name="difficulty" id="difficulty" required>
-        <option style="color: white" value="" disabled selected hidden>Please choose the Questions difficulty</option>
-        <option style="color: white"
-                value="1" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "easy")) echo 'selected'; ?>>
-            easy
-        </option>
-        <option style="color: white"
-                value="2" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "medium")) echo 'selected'; ?>>
-            medium
-        </option>
-        <option style="color: white"
-                value="3" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "hard")) echo 'selected'; ?>>
-            hard
-        </option>
-    </select>
+        <label for="difficulty">Difficulty</label>
+        <select style="color: white" type="text" name="difficulty" id="difficulty" required>
+            <option style="color: white" value="" disabled selected hidden>Please choose the Questions difficulty</option>
+            <option style="color: white"
+                    value="1" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "easy")) echo 'selected'; ?>>
+                easy
+            </option>
+            <option style="color: white"
+                    value="2" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "medium")) echo 'selected'; ?>>
+                medium
+            </option>
+            <option style="color: white"
+                    value="3" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "hard")) echo 'selected'; ?>>
+                hard
+            </option>
+        </select>
 
 
-    <div class="table-responsive">
-        <table style="width: 1125px" class="table table-bordered" id="dynamic_field">
-            <?php
-            echo '<label for="answer">Answers</label>';
-            for ($q = 1; $q <= $stm1->rowCount(); $q++) {
-                echo '<tr id="row', $q, '">';
+        <div class="table-responsive">
+            <table style="width: 1125px" class="table table-bordered" id="dynamic_field">
+                <?php
+                echo '<label for="answer">Answers</label>';
+                for ($q = 1; $q <= $stm1->rowCount(); $q++) {
+                    echo '<tr id="row', $q, '">';
 
-                echo '<td hidden="hidden">', $q, '</td><td ><input style = "color: white" type = "text" name="answer[]', $q, '" placeholder = "Add your new question"
+                    echo '<td hidden="hidden">', $q, '</td><td ><input style = "color: white" type = "text" name="answer[]', $q, '" placeholder = "Add your new question"
                        value="', $rowAnswers[$q - 1]['Answer'], '"></td >';
 
-                if (!isset($q) or $q == 1) {
-                    echo '<td style="align-content: center; vertical-align: middle"><button style="vertical-align: middle" type="button" name="add" id="add" class="btn btn-success">Add More</button></td>';
-                } else {
+                    if (!isset($q) or $q == 1) {
+                        echo '<td style="align-content: center; vertical-align: middle"><button style="vertical-align: middle" type="button" name="add" id="add" class="btn btn-success">Add More</button></td>';
+                    } else {
 
-                    echo '<td style="align-content: center; vertical-align: middle"><button style="vertical-align: middle" type="button" name="remove" id="', $q, '"', ' class="btn btn-danger btn_remove">X</button></td>';
+                        echo '<td style="align-content: center; vertical-align: middle"><button style="vertical-align: middle" type="button" name="remove" id="', $q, '"', ' class="btn btn-danger btn_remove">X</button></td>';
+                    }
+                    echo '</tr>';
                 }
-                echo '</tr>';
-            }
-            ?>
+                ?>
 
-        </table>
+            </table>
 
-        <input style="vertical-align: middle" type="submit" name="submit" id="submit" class="btn btn-info"
-               value="Next"/>
-    </div>
+            <input style="vertical-align: middle" type="submit" name="submit" id="submit" class="btn btn-info"
+                   value="Next"/>
+        </div>
 
     </form>
     </body>

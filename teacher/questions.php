@@ -37,6 +37,7 @@ if ($_SESSION['role'] == 'Teacher') {
 
         <?php
         try {
+
             $log = $conn->prepare("select Question from php_db.Question q inner join php_db.Question_Lesson ql on q.Question_ID = ql.Question_ID
 inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (select Lesson_ID from php_db.Lesson where Lesson.Lesson_Name = :lesson)");
 
@@ -44,7 +45,7 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
             $log->execute();
 
             $row = $log->fetchAll(PDO::FETCH_ASSOC);
-            $_SESSION['row']= $row;
+            $_SESSION['row'] = $row;
 
 
         } catch (PDOException $e) {
@@ -59,9 +60,10 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
 
         ?>
 
-        <table>
+        <table >
             <tr class="nr">
                 <th>Question</th>
+                <th></th>
                 <th></th>
                 <th></th>
             </tr>
@@ -70,17 +72,21 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
 
             for ($i = 0; $i < $log->rowCount(); $i++) {
                 ?>
-                <tr onclick="<?php echo 'myFunction(this)'; $_SESSION['id'] = $_COOKIE['id'] - 1;
-                 ?>">
-                    <td>
+                <tr>
+                    <td >
                         <?php echo $row[$i]['Question'] ?>
                     </td>
-                    <td>
-                        <input type="submit" name="edit" value="edit" />
-
+                    <td><a style="color: white">
+                        Edit
+                        </a>
                     </td>
-                    <td>
-                        <input type="submit" name="delete" value="delete" formaction="/sphy140/project%20php/teacher/delete.php"/>
+                    <td><a style="color: white">
+                            Delete
+                        </a>
+                    </td>
+                    <td><a style="color: white">
+                            View
+                        </a>
                     </td>
                 </tr>
                 <?php
@@ -90,36 +96,22 @@ inner join php_db.Lesson l on ql.Lesson_ID = l.Lesson_ID where l.Lesson_ID = (se
 
             <tr>
                 <td>
-                    <button name="add" value="add" formaction="/sphy140/project%20php/teacher/add.php">Add a new Question</button>
+                    <button name="add" value="add" formaction="/sphy140/project%20php/teacher/add.php">Add a new
+                        Question
+                    </button>
                 </td>
 
             </tr>
 
         </table>
-        <script src="myFunction.js" >
-
-        </script>
-        <?php
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-            $_COOKIE['id'] = null;
-
-            ?>
-
-            <?php
-            if (isset($_POST['edit'])) {
-                echo $_SESSION['id'];
-
-
-                header("Location: edit.php");
-
-            }
-        }
-
-        ?>
 
     </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script src="EditDelView.js"></script>
 
     </body>
     </html>

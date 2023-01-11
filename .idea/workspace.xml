@@ -5,14 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0794ca85-47c4-4a3a-9b7f-b16da27b2f72" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/teacher/edit2.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/project php.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/project php.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/teacher/EditDelView.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/teacher/view.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/add.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/question.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/question.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher/delete.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/delete.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/teacher/edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/myFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/myFunction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher/edit2.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/edit2.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher/myFunction.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher/questions.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/questions.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +76,10 @@
       <workItem from="1673164216390" duration="30294000" />
       <workItem from="1673244451782" duration="17767000" />
       <workItem from="1673331001919" duration="13345000" />
-      <workItem from="1673354390821" duration="5657000" />
+      <workItem from="1673354390821" duration="12412000" />
+      <workItem from="1673381664164" duration="511000" />
+      <workItem from="1673417101975" duration="4823000" />
+      <workItem from="1673458203868" duration="3795000" />
     </task>
     <servers />
   </component>
