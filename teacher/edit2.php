@@ -77,12 +77,13 @@ try {
 
     echo '<h3 style="text-align: center"> Your answer is:</h3>';
 
-    $idConf = $conn->prepare("select Question, Difficulty_ID, Answer, Right_Answer, Difficulty_ID 
+    $idConf = $conn->prepare("select Question, Difficulty_ID, Answer, Right_Answer 
             from php_db.Question inner join php_db.Answer on Answer.Question_ID = Question.Question_ID 
             inner join php_db.Right_Answer on Question.Question_ID = Right_Answer.Question_ID 
             where php_db.Question.Question = :question");
 
-    $idConf->bindParam(':question', $_SESSION['row'][$_SESSION['rowId']]['Question']);
+    $idConf->bindParam(':question', $_SESSION['qId']);
+
     $idConf->execute();
 
 
@@ -108,6 +109,8 @@ try {
 
 
     <p style="text-align: left;color: #74cbe8">Question: <?php echo $row2[0]['Question'] ?> </p>
+
+
     <ul>
 
         <li style="color: #74cbe8">Answers:</li>
@@ -115,7 +118,7 @@ try {
         <?php
         for ($i = 0; $i < $idConf->rowCount(); $i++) {
             $green = null;
-            if (!strcmp($row2[$i]['Answer'], $row2[0]['Right_Answer'])) {
+            if (in_array($row2[$i]['Answer'], $row2['Right_Answer'])) {
                 $green = 'style="color: green"';
             }
 
