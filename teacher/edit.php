@@ -33,7 +33,7 @@ if ($_SESSION['role'] == 'Teacher') {
     include('../database/db_connection.php');
 
     try {
-        $idConf = $conn->prepare("select Question.Question_ID as id from php_db.Question  where php_db.Question.Question = :question");
+        $idConf = $conn->prepare("select Question.Question_ID as id, Difficulty_ID from php_db.Question  where php_db.Question.Question = :question");
 
         $idConf->bindParam(':question', $_SESSION['row'][$rowId]['Question']);
         $idConf->execute();
@@ -42,18 +42,18 @@ if ($_SESSION['role'] == 'Teacher') {
         $row = $idConf->fetchAll(PDO::FETCH_ASSOC);
 
         $_SESSION['qId'] = $row[0]['id'];
-
+        $_SESSION['question'] = $_SESSION['row'][$rowId]['Question'];
 
         $stm1 = $conn->prepare("select Answer  from php_db.Answer where Question_ID = :id");
+
         $stm1->bindParam(':id', $row[0]['id']);
+
         $stm1->execute();
 
         $rowAnswers = $stm1->fetchAll(PDO::FETCH_ASSOC);
 
 
-        $stm = $conn->prepare("select Question, Right_Answer, Difficulty  from php_db.Question 
-            inner join php_db.Dificulty on Question.Difficulty_ID = Dificulty.Difficulty_Id
-            inner join php_db.Right_Answer on Question.Right_Answer_ID = Right_Answer.Right_Answer_ID
+        $stm = $conn->prepare("select Right_Answer  from php_db.Right_Answer
             where Question_ID = :id");
 
         $stm->bindParam(':id', $row[0]['id']);
@@ -125,21 +125,21 @@ if ($_SESSION['role'] == 'Teacher') {
         <label for="question">Question:</label>
         <input style="color: white" type="text" name="question" placeholder="Wright your Question here" id="question"
                required
-               value="<?php echo $rowQuestion[0]['Question']; ?>">
+               value="<?php echo $_SESSION['question']; ?>">
 
         <label for="difficulty">Difficulty</label>
         <select style="color: white" type="text" name="difficulty" id="difficulty" required>
             <option style="color: white" value="" disabled selected hidden>Please choose the Questions difficulty</option>
             <option style="color: white"
-                    value="1" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "easy")) echo 'selected'; ?>>
+                    value="1" <?php if (isset($row[0]['Difficulty_ID']) and !strcmp($row[0]['Difficulty_ID'], "1")) echo 'selected'; ?>>
                 easy
             </option>
             <option style="color: white"
-                    value="2" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "medium")) echo 'selected'; ?>>
+                    value="2" <?php if (isset($row[0]['Difficulty_ID']) and !strcmp($row[0]['Difficulty_ID'], "2")) echo 'selected'; ?>>
                 medium
             </option>
             <option style="color: white"
-                    value="3" <?php if (isset($rowQuestion[0]['Difficulty']) and !strcmp($rowQuestion[0]['Difficulty'], "hard")) echo 'selected'; ?>>
+                    value="3" <?php if (isset($row[0]['Difficulty_ID']) and !strcmp($row[0]['Difficulty_ID'], "3")) echo 'selected'; ?>>
                 hard
             </option>
         </select>

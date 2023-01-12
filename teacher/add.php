@@ -52,18 +52,22 @@ if ($_SESSION['role'] == 'Teacher') {
 
 
             $Ranswers = $_POST['right_answer'];
-            $nrq = count($Ranswers);
-
-            for ($i = 0; $i < $nrq; $i++) {
-
-                $RAns = $conn->prepare("insert into php_db.Right_Answer (Right_Answer, Question_ID) values (:Right, :que)");
-
-                $RAns->bindParam(':Right', $Ranswers[$i]);
-                $RAns->bindParam(':que', $QueId[0]['Question_ID']);
 
 
-                $RAns->execute();
 
+            for ($i = 1; $i <= $_SESSION['nque']; $i++) {
+
+                $var = 'answer'.$i;
+
+                if (in_array($i,$Ranswers)){
+                    $RAns = $conn->prepare("insert into php_db.Right_Answer (Right_Answer, Question_ID) values (:Right, :que)");
+
+                    $RAns->bindParam(':Right', $_POST[$var]);
+                    $RAns->bindParam(':que', $QueId[0]['Question_ID']);
+
+
+                    $RAns->execute();
+                }
             }
 
 
@@ -76,6 +80,18 @@ if ($_SESSION['role'] == 'Teacher') {
 
             $queAns->execute();
 
+            for ($i=1;$i <= $_SESSION['nque'];$i ++) {
+
+                $var = 'answer'.$i;
+
+                $queAns = $conn->prepare("insert into php_db.Answer (Answer,Question_ID) values (:answer, :qid)");
+
+                $queAns->bindParam(':answer', $_POST[$var]);
+                $queAns->bindParam(':qid', $QueId[0]['Question_ID']);
+
+
+                $queAns->execute();
+            }
             echo '<h3>Your Question saved Successfully!</h3>';
             ?>
             <button><a href="add.php" style="color: white">Add a new question</a></button>
@@ -89,7 +105,6 @@ if ($_SESSION['role'] == 'Teacher') {
             exit();
 
         } catch (PDOException $e) {
-
             echo $e->getMessage();
             echo 'Something bad happened';
         }
@@ -139,8 +154,8 @@ if ($_SESSION['role'] == 'Teacher') {
 
                 for ($i = 1; $i <= $_POST['nm']; $i++) {
 
-                    echo '<label for="answer">Answer ', $i, '</label>';
-                    echo '<input type="text" name="answer', $i, '" placeholder="Wright the answer here" id="answer" required>';
+                    echo '<label for="answer',$i,'">Answer ', $i, '</label>';
+                    echo '<input type="text" name="answer', $i,'" placeholder="Wright the answer here" id="answer" required>';
                 }
                 ?>
                 <label for="right_answer">Right Answer is the Answer :</label>
@@ -162,7 +177,6 @@ if ($_SESSION['role'] == 'Teacher') {
             }
 
         }
-        print_r($_POST['right_answer']);
         ?>
 
         <button>Next</button>
