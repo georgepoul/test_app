@@ -53,14 +53,25 @@ try {
 
     try {
 
-    $idConf = $conn->prepare("update php_db.Right_Answer inner join php_db.Question on 
-                Question.Right_Answer_ID = Right_Answer.Right_Answer_ID
-                set Right_Answer = :rAn where Question = :que ");
+    $idConf = $conn->prepare("delete from php_db.Right_Answer  where Question_ID = :queid ");
 
-    $idConf->bindParam(':rAn', $_POST['right_answer']);
-    $idConf->bindParam(':que', $row[0]['Question']);
+    $idConf->bindParam(':queid', $_SESSION['qId']);
 
     $idConf->execute();
+
+
+    $RAnswer = $_POST['right_answer'];
+
+    for ($i=0;$i < count($RAnswer);$i++) {
+        $idConf = $conn->prepare("insert into php_db.Right_Answer(Right_Answer, Question_ID) values (:answer , :id)");
+
+        $idConf->bindParam(':answer', $RAnswer[$i]);
+        $idConf->bindParam(':id', $_SESSION['qId']);
+
+        $idConf->execute();
+
+    }
+
 
     echo '<h3>Your Question edited Successfully!</h3>';
 
@@ -68,7 +79,7 @@ try {
 
     $idConf = $conn->prepare("select Question, Difficulty_ID, Answer, Right_Answer, Difficulty_ID 
             from php_db.Question inner join php_db.Answer on Answer.Question_ID = Question.Question_ID 
-            inner join php_db.Right_Answer on Question.Right_Answer_ID = Right_Answer.Right_Answer_ID 
+            inner join php_db.Right_Answer on Question.Question_ID = Right_Answer.Question_ID 
             where php_db.Question.Question = :question");
 
     $idConf->bindParam(':question', $_SESSION['row'][$_SESSION['rowId']]['Question']);
@@ -135,16 +146,16 @@ try {
 
 
     <label style="color: white" type="text" id="question"> Question :
-        <?php echo $row[0]['Question'];  print_r($row);?>
+        <?php echo $row[0]['Question'];?>
     </label>
 
     <label for="right_answer">Right Question is the Answer :</label>
-    <select style="color: white" type="text" name="right_answer" id="right_answer" required>
+    <select style="color: white" type="text" name="right_answer[]" id="right_answer" required multiple>
         <?php
 
         for ($j = 0; $j < $Answers->rowCount(); $j++) {
 
-            echo '<option style="color: white; vert" value="', $row[$j]['Answer'], '">', $row[$j]['Answer'], ' </option>';
+            echo '<option style="color: white; vert" value="', $row[$j]['Answer'], '">', $row[$j]['Answer'], '</option>';
         }
         ?>
     </select>
