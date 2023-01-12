@@ -35,48 +35,43 @@ if ($_SESSION['role'] == 'Teacher') {
             include('../database/db_connection.php');
 
 
+            $Que = $conn->prepare("insert into php_db.Question (Question, Difficulty_ID)
+                values (:question, :diff)");
 
-            $RAns = $conn->prepare("insert into php_db.Right_Answer (Right_Answer) values (:Right)");
-
-            $var =  'answer' . (string)$_POST['right_answer'];
-
-            $RAns->bindParam(':Right', $_POST[$var]);
-            $RAns->execute();
-
-            $RAnsId = $conn->prepare("select max(Right_Answer_ID) from  php_db.Right_Answer");
-            $RAnsId->execute();
-
-            $raId = $RAnsId->fetchAll(PDO::FETCH_ASSOC);
-
-
-
-            $Que = $conn->prepare("insert into php_db.Question (Question, Right_Answer_ID, Difficulty_ID)
-                values (:question, :Right, :diff)");
             $Que->bindParam(':question', $_POST['question']);
-            $Que->bindParam(':Right', $raId[0]['max(Right_Answer_ID)']);
             $Que->bindParam(':diff', $_POST['difficulty']);
 
             $Que->execute();
 
+            $QueId = $conn->prepare("select Question_ID from php_db.Question where Question = :que");
+            $QueId->bindParam(':que', $_POST['question']);
+
+            $QueId->execute();
+
+            $QueId = $QueId->fetchAll(PDO::FETCH_ASSOC);
 
 
-            for ($i = 1; $i <= $_SESSION['nque']; $i++) {
-                $ans = $conn->prepare("insert into php_db.Answer (Answer, Question_ID)
-                values (:answer, (select Question_ID from php_db.Question where Question = :que))");
+            $Ranswers = $_POST['right_answer'];
+            $nrq = count($Ranswers);
 
-                $value = 'answer' . (string)$i;
+            for ($i = 0; $i < $nrq; $i++) {
 
-                $ans->bindParam(':answer', $_POST[$value]);
-                $ans->bindParam(':que', $_POST['question']);
+                $RAns = $conn->prepare("insert into php_db.Right_Answer (Right_Answer, Question_ID) values (:Right, :que)");
 
-                $ans->execute();
+                $RAns->bindParam(':Right', $Ranswers[$i]);
+                $RAns->bindParam(':que', $QueId[0]['Question_ID']);
+
+
+                $RAns->execute();
+
             }
 
+
             $queAns = $conn->prepare("insert into php_db.Question_Lesson (Lesson_ID, Question_ID)
-                values ((select Lesson.Lesson_ID from php_db.Lesson where Lesson.Lesson_Name = :lname), (select Question_ID from php_db.Question where Question = :que))");
+                values ((select Lesson.Lesson_ID from php_db.Lesson where Lesson.Lesson_Name = :lname), :qid)");
 
             $queAns->bindParam(':lname', $_SESSION['lesson']);
-            $queAns->bindParam(':que', $_POST['question']);
+            $queAns->bindParam(':qid', $QueId[0]['Question_ID']);
 
 
             $queAns->execute();
@@ -123,8 +118,8 @@ if ($_SESSION['role'] == 'Teacher') {
             </option>
         </select>
 
-        <label <?php if (isset($_POST['nm'])) echo 'hidden'?> for="nm">Number of Answers:</label>
-        <select <?php if (isset($_POST['nm'])) echo 'hidden'?> type="text" id="nm" name="nm">>
+        <label <?php if (isset($_POST['nm'])) echo 'hidden' ?> for="nm">Number of Answers:</label>
+        <select <?php if (isset($_POST['nm'])) echo 'hidden' ?> type="text" id="nm" name="nm">>
             <option value="" disabled selected hidden>Please choose how many answers do you wont to add in your
                 question
             </option>
@@ -149,7 +144,7 @@ if ($_SESSION['role'] == 'Teacher') {
                 }
                 ?>
                 <label for="right_answer">Right Answer is the Answer :</label>
-                <select type="text" name="right_answer" id="right_answer" required>
+                <select type="text" name="right_answer[]" id="right_answer" required multiple>
                     <option value="" disabled selected hidden>Please choose which of the added Answer is Right
                     </option>
                     <?php
@@ -167,6 +162,7 @@ if ($_SESSION['role'] == 'Teacher') {
             }
 
         }
+        print_r($_POST['right_answer']);
         ?>
 
         <button>Next</button>

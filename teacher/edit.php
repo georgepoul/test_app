@@ -77,7 +77,7 @@ if ($_SESSION['role'] == 'Teacher') {
             try {
                 if (isset($_POST['question'])) {
                     $updQue = $conn->prepare("update php_db.Question 
-             set Question = :question, Difficulty_ID = :difficulty where Question_ID = :id");
+                                set Question = :question, Difficulty_ID = :difficulty where Question_ID = :id");
 
                     $updQue->bindParam(':question', $_POST['question']);
                     $updQue->bindParam(':difficulty', $_POST['difficulty']);
