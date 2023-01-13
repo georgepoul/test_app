@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0794ca85-47c4-4a3a-9b7f-b16da27b2f72" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/teacher/editCourseName.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/student/testme.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/EditDelView.js" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/EditDelView.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/EditDelViewCourses.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/editCourses.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/editCourses.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/teacherHeader.inc.php" beforeDir="false" afterPath="$PROJECT_DIR$/templates/teacherHeader.inc.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher/edit2.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/edit2.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +77,7 @@
       <workItem from="1673467883490" duration="192000" />
       <workItem from="1673503489329" duration="1459000" />
       <workItem from="1673505103188" duration="16516000" />
-      <workItem from="1673538008271" duration="21554000" />
+      <workItem from="1673538008271" duration="22876000" />
     </task>
     <servers />
   </component>
