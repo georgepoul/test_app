@@ -4,9 +4,11 @@ $(document).ready(function () {
         let row_index = $(this).parent().index();
         let col_index = $(this).index();
 
+        console.log(row_index)
+        console.log(col_index)
+
+
         if (col_index === 1){
-            // console.log(row_index)
-            // console.log(col_index)
             window.location.assign("edit.php?id=" + row_index)
         }else if (col_index ===2){
 

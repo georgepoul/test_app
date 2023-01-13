@@ -68,11 +68,13 @@ if ($_SESSION['role'] == 'Teacher') {
 
             $AddedLe = null;
 
-            for ($i = 0; $i < count($_POST['Lesson']); $i++) {
+            $selectedL = $_POST['Lesson'];
+
+            for ($i = 0; $i < count($selectedL); $i++) {
 
                 $Que = $conn->prepare("select Lesson_ID from php_db.Lesson where Lesson_Name = :name");
 
-                $Que->bindParam(':name', $Lessons[$i]['Lesson_Name']);
+                $Que->bindParam(':name', $selectedL[$i]);
 
                 $Que->execute();
 
@@ -100,6 +102,7 @@ if ($_SESSION['role'] == 'Teacher') {
             for ($i = 1; $i <= $_SESSION['nque']; $i++) {
 
                 $var = 'answer' . $i;
+
                 $Answers[$i-1] = $_POST[$var];
 
                 if (in_array($i, $Ranswers)) {
@@ -151,6 +154,7 @@ if ($_SESSION['role'] == 'Teacher') {
                 <?php
                 for ($i = 0; $i < count($Answers); $i++) {
                     $green = null;
+
                     if (in_array($Answers[$i], $RanswersEnd)) {
                         $green = 'style="color: green"';
                     }
@@ -170,9 +174,9 @@ if ($_SESSION['role'] == 'Teacher') {
                 ?>
             </ul>
 
-            <button><a href="add.php" style="color: white">Add a new question</a></button><br>
+            <button formaction="http://localhost/sphy140/project%20php/teacher/add.php"><a style="color: white">Add a new question</a></button><br>
 
-            <button><a href="questions.php" style="color: white">See all the questions for the
+            <button formaction="http://localhost/sphy140/project%20php/teacher/questions.php"><a style="color: white">See all the questions for the
                     course: <?php echo $_SESSION['lesson'] ?></a></button>
             </form>
             <?php

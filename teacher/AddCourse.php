@@ -48,9 +48,9 @@ if ($_SESSION['role'] == 'Teacher') {
                     <h3>Your Course saved Successfully!</h3>
                     <p>Your Course is : <?php echo $_POST['course'] ?></p>
 
-                    <button><a href="AddCourse.php" style="color: white">Add a new Course</a></button><br>
+                    <button formaction="http://localhost/sphy140/project%20php/teacher/AddCourse.php"><a style="color: white">Add a new Course</a></button><br>
 
-                    <button><a href="editCourses.php" style="color: white">See all the Courses.</a></button>
+                    <button formaction="http://localhost/sphy140/project%20php/teacher/editCourses.php"><a style="color: white">See all the Courses.</a></button>
 
                     <?php
 

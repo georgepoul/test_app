@@ -36,13 +36,6 @@ if ($_SESSION['role'] == 'Teacher') {
         echo 'Something bad happened';
     }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-        if (isset($_POST['lesson'])) {
-            $_SESSION['lesson'] = @$_POST['lesson'];
-            header("Location: questions.php");
-        }
-    }
     ?>
 
 
@@ -52,43 +45,57 @@ if ($_SESSION['role'] == 'Teacher') {
     </div>
     <form method="post">
 
-        <p style="text-align: left">The courses are: </p>
-<table >
-            <tr class="nr">
-                <th>Courses</th>
-                <th></th>
 
-            </tr>
-
-            <?php
-
-            for ($i = 0; $i < $log->rowCount(); $i++) {
-                ?>
-                <tr>
-                    <td >
-                        <?php echo $row[$i]['Lesson_Name'] ?>
-                    </td>
-
-                    <td><a style="color: white">
-                            Delete
-                        </a>
-                    </td>
-                </tr>
+            <p style="text-align: left">The courses are: </p>
+            <table>
                 <?php
-            }
-
+        if ($log->rowCount() == 0) {
+            echo '<h3>No questions on this course</h3>';
+        } else {
             ?>
+                <tr class="nr">
+                    <th>Courses</th>
+                    <th></th>
+                    <th></th>
 
-            <tr>
-                <td>
-                    <button name="add" value="add" formaction="/sphy140/project%20php/teacher/AddCourse.php">Add a new
-                        Course
-                    </button>
-                </td>
+                </tr>
 
-            </tr>
+                <?php
 
-        </table>
+                for ($i = 0; $i < $log->rowCount(); $i++) {
+                    ?>
+                    <tr>
+                        <td>
+                            <?php echo $row[$i]['Lesson_Name'] ?>
+                        </td>
+
+                        <td><a style="color: white">
+                                Delete
+                            </a>
+                        </td>
+                        <td><a style="color: white">
+                                Edit
+                            </a>
+                        </td>
+                    </tr>
+                    <?php
+                }
+        }
+
+                ?>
+
+                <tr>
+                    <td>
+                        <button name="add" value="add" formaction="/sphy140/project%20php/teacher/AddCourse.php">Add a
+                            new
+                            Course
+                        </button>
+                    </td>
+
+                </tr>
+
+            </table>
+
 
     </form>
 
@@ -96,12 +103,35 @@ if ($_SESSION['role'] == 'Teacher') {
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-    <script src="EditDelViewCourses.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('td').click(function () {
+
+                let row_index = $(this).parent().index();
+                let col_index = $(this).index();
+
+
+                if (col_index === 1) {
+
+                    window.location.assign("deleteCourses.php?id=" + row_index)
+
+                } else if (col_index === 2){
+
+                    window.location.assign("editCourseName.php?id=" + row_index)
+
+                }
+
+            });
+
+        })
+    </script>
 
     </body>
     </html>
 
     <?php
+
 } else {
     echo '<h4>401, Unauthorized</h4>';
 }
