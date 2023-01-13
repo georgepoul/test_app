@@ -81,8 +81,8 @@ if ($_SESSION['role'] == 'Teacher') {
 
             <tr>
                 <td>
-                    <button name="add" value="add" formaction="/sphy140/project%20php/teacher/add.php">Add a new
-                        Question
+                    <button name="add" value="add" formaction="/sphy140/project%20php/teacher/AddCourse.php">Add a new
+                        Course
                     </button>
                 </td>
 
