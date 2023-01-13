@@ -77,38 +77,49 @@ try {
 
     echo '<h3 style="text-align: center"> Your answer is:</h3>';
 
-    $idConf = $conn->prepare("select Question, Difficulty_ID, Answer, Right_Answer 
+        $idConf = $conn->prepare("select Question.Question_ID, Question, Difficulty_ID, Answer 
             from php_db.Question inner join php_db.Answer on Answer.Question_ID = Question.Question_ID 
-            inner join php_db.Right_Answer on Question.Question_ID = Right_Answer.Question_ID 
             where php_db.Question.Question = :question");
 
-    $idConf->bindParam(':question', $_SESSION['qId']);
+        $idConf->bindParam(':question', $_SESSION['row'][$_SESSION['rowId']]['Question']);
+        $idConf->execute();
 
-    $idConf->execute();
+        $row3 = $idConf->fetchAll(PDO::FETCH_ASSOC);
 
+        $idConf2 = $conn->prepare("select Right_Answer 
+            from php_db.Right_Answer
+            where php_db.Right_Answer.Question_ID = :id");
 
-    $row2 = $idConf->fetchAll(PDO::FETCH_ASSOC);
+        $idConf2->bindParam(':id', $row3[0]['Question_ID']);
+        $idConf2->execute();
 
-    for ($i = 1; $i < 4; $i++) {
-        if (!strcmp($row2[0]['Difficulty_ID'], '1')) {
+        $row4 = $idConf2->fetchAll(PDO::FETCH_ASSOC);
+
+        $ans = null;
+
+        for ($i=0;$i<$idConf2->rowCount();$i++){
+            $ans[$i]= $row4[$i]['Right_Answer'];
+        }
+        if (!strcmp($row3[0]['Difficulty_ID'], '1')) {
             $dif = 'easy';
             $col = 'style="color: green"';
+
         }
-        if (!strcmp($row2[0]['Difficulty_ID'], '2')) {
+
+        if (!strcmp($row3[0]['Difficulty_ID'], '2')) {
             $dif = 'medium';
             $col = 'style="color: orange"';
 
         }
-        if (!strcmp($row2[0]['Difficulty_ID'], '3')) {
+        if (!strcmp($row3[0]['Difficulty_ID'], '3')) {
             $dif = 'hard';
             $col = 'style="color: red"';
 
         }
-    }
     ?>
 
 
-    <p style="text-align: left;color: #74cbe8">Question: <?php echo $row2[0]['Question'] ?> </p>
+    <p style="text-align: left;color: #74cbe8">Question: <?php echo $row3[0]['Question'] ?> </p>
 
 
     <ul>
@@ -118,11 +129,11 @@ try {
         <?php
         for ($i = 0; $i < $idConf->rowCount(); $i++) {
             $green = null;
-            if (in_array($row2[$i]['Answer'], $row2['Right_Answer'])) {
+            if (in_array($row3[$i]['Answer'], $ans)) {
                 $green = 'style="color: green"';
             }
 
-            echo '<li ', $green, ' >', $row2[$i]['Answer'], '</li>';
+            echo '<li ', $green, ' >', $row3[$i]['Answer'], '</li>';
         }
         ?>
         <br>
@@ -151,8 +162,9 @@ try {
     <label style="color: white" type="text" id="question"> Question :
         <?php echo $row[0]['Question'];?>
     </label>
-
     <label for="right_answer">Right Question is the Answer :</label>
+    <p style="color: #ff512f">For multiple choice please push ctrl + click or cmd+click</p>
+
     <select style="color: white" type="text" name="right_answer[]" id="right_answer" required multiple>
         <?php
 

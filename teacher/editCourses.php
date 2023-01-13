@@ -7,7 +7,7 @@ if ($_SESSION['role'] == 'Teacher') {
     <html lang="en">
     <head>
         <title>Test Page</title>
-        <link rel="stylesheet" href="../css/template.css">
+        <link rel="stylesheet" href="../css/question.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link rel="stylesheet" href="../https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
@@ -29,6 +29,8 @@ if ($_SESSION['role'] == 'Teacher') {
 
         $row = $log->fetchAll(PDO::FETCH_ASSOC);
 
+        $_SESSION['lessons'] = $row;
+
     } catch (PDOException $e) {
 
         echo 'Something bad happened';
@@ -37,7 +39,7 @@ if ($_SESSION['role'] == 'Teacher') {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (isset($_POST['lesson'])) {
-            $_SESSION['lesson'] = $_POST['lesson'];
+            $_SESSION['lesson'] = @$_POST['lesson'];
             header("Location: questions.php");
         }
     }
@@ -51,40 +53,51 @@ if ($_SESSION['role'] == 'Teacher') {
     <form method="post">
 
         <p style="text-align: left">The courses are: </p>
+<table >
+            <tr class="nr">
+                <th>Courses</th>
+                <th></th>
 
-        <?php
-        if ($log->rowCount() == 0) {
+            </tr>
 
-            echo "<p> 'There are no courses'</p>";
-
-        } else {
-
-            print '<ul>';
-            for ($i = 0; $i < sizeof($row); $i++) {
-
-                ?>
-                <li> <?php print $row[$i]['Lesson_Name'] ?></li>
-                <?php
-            }
-
-            print '</ul>';
-        }
-        $conn = null;
-        ?>
-        <p style="text-align: left">Please choose a lesson for editing it's questions</p>
-        <select name="lesson">
             <?php
-            for ($i = 0; $i < sizeof($row); $i++) {
-                ?>
-                <option value="<?php echo $row[$i]['Lesson_Name']; ?>"><?php echo $row[$i]['Lesson_Name']; ?></option>
 
+            for ($i = 0; $i < $log->rowCount(); $i++) {
+                ?>
+                <tr>
+                    <td >
+                        <?php echo $row[$i]['Lesson_Name'] ?>
+                    </td>
+
+                    <td><a style="color: white">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
                 <?php
             }
+
             ?>
-        </select>
-        <button type="submit"> Submit</button>
+
+            <tr>
+                <td>
+                    <button name="add" value="add" formaction="/sphy140/project%20php/teacher/add.php">Add a new
+                        Question
+                    </button>
+                </td>
+
+            </tr>
+
+        </table>
 
     </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script src="EditDelViewCourses.js"></script>
+
     </body>
     </html>
 
@@ -93,3 +106,4 @@ if ($_SESSION['role'] == 'Teacher') {
     echo '<h4>401, Unauthorized</h4>';
 }
 ?>
+

@@ -12,6 +12,7 @@
         <h1 column="4" class="log"><a href="teacher.php">Test Page</a></h1>
         <nav column="8" class="nav">
             <ul>
+                <li><a href="editCourses.php">Edit Courses</a></li>
                 <li><a href="courses.php">Edit Questions</a></li>
                 <li><a href="statistics.php">Statistics</a></li>
                 <li><a href="../logout.php">Log out</a></li>

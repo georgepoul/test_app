@@ -25,14 +25,30 @@ if ($_SESSION['role'] == 'Teacher') {
 
     <?php
 
+    include('../database/db_connection.php');
+
+    try {
+
+        $Less = $conn->prepare("select Lesson_Name from php_db.Lesson");
+
+        $Less->execute();
+
+        $Lessons = $Less->fetchAll(PDO::FETCH_ASSOC);
+
+        for ($i = 0; $i < count($Lessons); $i++) {
+            $AllLessons[$i] = $Lessons[$i]['Lesson_Name'];
+        }
+
+    } catch (PDOException $e) {
+        echo 'Something bad happened';
+    }
+
 
     if (isset($_POST['answer1'])) {
         ?>
         <form>
         <?php
         try {
-
-            include('../database/db_connection.php');
 
 
             $Que = $conn->prepare("insert into php_db.Question (Question, Difficulty_ID)
@@ -43,58 +59,119 @@ if ($_SESSION['role'] == 'Teacher') {
 
             $Que->execute();
 
-            $QueId = $conn->prepare("select Question_ID from php_db.Question where Question = :que");
-            $QueId->bindParam(':que', $_POST['question']);
+            $QueIdStm = $conn->prepare("select Question_ID from php_db.Question where Question = :que");
+            $QueIdStm->bindParam(':que', $_POST['question']);
 
-            $QueId->execute();
+            $QueIdStm->execute();
 
-            $QueId = $QueId->fetchAll(PDO::FETCH_ASSOC);
+            $QueId = $QueIdStm->fetchAll(PDO::FETCH_ASSOC);
+
+            $AddedLe = null;
+
+            for ($i = 0; $i < count($_POST['Lesson']); $i++) {
+
+                $Que = $conn->prepare("select Lesson_ID from php_db.Lesson where Lesson_Name = :name");
+
+                $Que->bindParam(':name', $Lessons[$i]['Lesson_Name']);
+
+                $Que->execute();
+
+                $LessonsID = $Que->fetchAll(PDO::FETCH_ASSOC);
+
+                $AddedLe[$i] = $LessonsID[0]['Lesson_ID'];
+
+            }
+
+            for ($i = 0; $i < count($AddedLe); $i++) {
+
+                $Que = $conn->prepare("insert into php_db.Question_Lesson (Question_ID, Lesson_ID)
+                values (:QID, :LID)");
+
+                $Que->bindParam(':QID', $QueId[0]['Question_ID']);
+                $Que->bindParam(':LID', $AddedLe[$i]);
+
+                $Que->execute();
+            }
 
 
             $Ranswers = $_POST['right_answer'];
 
 
-
             for ($i = 1; $i <= $_SESSION['nque']; $i++) {
 
-                $var = 'answer'.$i;
+                $var = 'answer' . $i;
+                $Answers[$i-1] = $_POST[$var];
 
-                if (in_array($i,$Ranswers)){
+                if (in_array($i, $Ranswers)) {
+
+                    $RanswersEnd[$i] = $_POST[$var];
                     $RAns = $conn->prepare("insert into php_db.Right_Answer (Right_Answer, Question_ID) values (:Right, :que)");
 
                     $RAns->bindParam(':Right', $_POST[$var]);
                     $RAns->bindParam(':que', $QueId[0]['Question_ID']);
 
-
                     $RAns->execute();
                 }
-            }
-
-
-            $queAns = $conn->prepare("insert into php_db.Question_Lesson (Lesson_ID, Question_ID)
-                values ((select Lesson.Lesson_ID from php_db.Lesson where Lesson.Lesson_Name = :lname), :qid)");
-
-            $queAns->bindParam(':lname', $_SESSION['lesson']);
-            $queAns->bindParam(':qid', $QueId[0]['Question_ID']);
-
-
-            $queAns->execute();
-
-            for ($i=1;$i <= $_SESSION['nque'];$i ++) {
-
-                $var = 'answer'.$i;
 
                 $queAns = $conn->prepare("insert into php_db.Answer (Answer,Question_ID) values (:answer, :qid)");
 
                 $queAns->bindParam(':answer', $_POST[$var]);
                 $queAns->bindParam(':qid', $QueId[0]['Question_ID']);
 
-
                 $queAns->execute();
             }
+
+
             echo '<h3>Your Question saved Successfully!</h3>';
+
+            for ($i = 1; $i < 4; $i++) {
+                if (!strcmp($_POST['difficulty'], '1')) {
+                    $dif = 'easy';
+                    $col = 'style="color: green"';
+                }
+                if (!strcmp($_POST['difficulty'], '2')) {
+                    $dif = 'medium';
+                    $col = 'style="color: orange"';
+
+                }
+                if (!strcmp($_POST['difficulty'], '3')) {
+                    $dif = 'hard';
+                    $col = 'style="color: red"';
+
+                }
+            }
+
             ?>
-            <button><a href="add.php" style="color: white">Add a new question</a></button>
+
+            <h3 style="text-align: center"> Your Question is:</h3>
+
+            <p style="text-align: left;color: #74cbe8">Question: <?php echo $_POST['question'] ?></p>
+            <ul>
+                <li style="color: #74cbe8">Answers:</li>
+                <?php
+                for ($i = 0; $i < count($Answers); $i++) {
+                    $green = null;
+                    if (in_array($Answers[$i], $RanswersEnd)) {
+                        $green = 'style="color: green"';
+                    }
+
+                    echo '<li ', $green, ' >', $Answers[$i], '</li>';
+                }
+                ?>
+                <br>
+                <li style="color: #74cbe8">Difficulty:</li>
+                <li <?php echo $col ?> > <?php echo $dif ?></li>
+                <br>
+                <li style="color: #74cbe8">Course/s</li>
+                <?php
+                foreach ($_POST['Lesson'] as $less){
+                    echo '<li ', $green, ' >', $less, '</li>';
+                }
+                ?>
+            </ul>
+
+            <button><a href="add.php" style="color: white">Add a new question</a></button><br>
+
             <button><a href="questions.php" style="color: white">See all the questions for the
                     course: <?php echo $_SESSION['lesson'] ?></a></button>
             </form>
@@ -113,10 +190,11 @@ if ($_SESSION['role'] == 'Teacher') {
     ?>
     <form method="post">
 
-        <h3>New Question for course: <?php echo $_SESSION['lesson']; ?></h3>
+        <h3>New Question</h3>
+
 
         <label for="question">Question:</label>
-        <input type="text" name="question" placeholder="Wright your Question here" id="question" required
+        <input type="text" name="question" placeholder="Write your Question here" id="question" required
             <?php if (isset($_POST['question'])) echo 'value="', $_POST['question'], '"'; ?>>
 
         <label for="difficulty">Difficulty</label>
@@ -154,11 +232,13 @@ if ($_SESSION['role'] == 'Teacher') {
 
                 for ($i = 1; $i <= $_POST['nm']; $i++) {
 
-                    echo '<label for="answer',$i,'">Answer ', $i, '</label>';
-                    echo '<input type="text" name="answer', $i,'" placeholder="Wright the answer here" id="answer" required>';
+                    echo '<label for="answer', $i, '">Answer ', $i, '</label>';
+                    echo '<input type="text" name="answer', $i, '" placeholder="Write the answer here" id="answer" required>';
                 }
                 ?>
                 <label for="right_answer">Right Answer is the Answer :</label>
+                <p style="color: #ff512f">For multiple choice please push ctrl + click or cmd+click</p>
+
                 <select type="text" name="right_answer[]" id="right_answer" required multiple>
                     <option value="" disabled selected hidden>Please choose which of the added Answer is Right
                     </option>
@@ -171,7 +251,16 @@ if ($_SESSION['role'] == 'Teacher') {
                     }
                     ?>
                 </select>
+                <label for="Lessons">Courses you wont the question to belong.</label>
+                <p style="color: #ff512f">For multiple choice please push ctrl + click or cmd+click</p>
+                <select type="text" name="Lesson[]" id="Lesson" required multiple>
 
+                    <?php
+                    for ($i = 0; $i < count($Lessons); $i++) {
+                        echo '<option value="', $Lessons[$i]['Lesson_Name'], '">', $Lessons[$i]['Lesson_Name'], '</option>';
+                    }
+                    ?>
+                </select>
                 <?php
 
             }
