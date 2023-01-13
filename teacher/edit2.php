@@ -28,6 +28,13 @@ if ($_SESSION['role'] == 'Teacher') {
 include('../database/db_connection.php');
 
 try {
+    $Less = $conn->prepare("select Lesson_Name from php_db.Lesson");
+
+    $Less->execute();
+
+    $Lessons = $Less->fetchAll(PDO::FETCH_ASSOC);
+
+
     $Answers = $conn->prepare("select Answer, Answer_ID, Question  from php_db.Answer inner join php_db.Question
                                     on Answer.Question_ID = Question.Question_ID  where php_db.Answer.Question_ID = :id");
 
@@ -52,6 +59,39 @@ try {
     if (isset($_POST['right_answer'])){
 
     try {
+
+        $Que = $conn->prepare("delete from php_db.Question_Lesson where Question_ID= :Qid ");
+
+        $Que->bindParam(':Qid', $_SESSION['qId']);
+
+        $Que->execute();
+
+        $selectedL = $_POST['Lesson'];
+
+        for ($i = 0; $i < count($selectedL); $i++) {
+
+            $Que = $conn->prepare("select Lesson_ID from php_db.Lesson where Lesson_Name = :name");
+
+            $Que->bindParam(':name', $selectedL[$i]);
+
+            $Que->execute();
+
+            $LessonsID = $Que->fetchAll(PDO::FETCH_ASSOC);
+
+            $AddedLe[$i] = $LessonsID[0]['Lesson_ID'];
+
+        }
+
+        for ($i = 0; $i < count($AddedLe); $i++) {
+
+            $Que = $conn->prepare("insert into php_db.Question_Lesson (Question_ID, Lesson_ID)
+                values (:QID, :LID)");
+
+            $Que->bindParam(':QID', $_SESSION['qId']);
+            $Que->bindParam(':LID', $AddedLe[$i]);
+
+            $Que->execute();
+        }
 
     $idConf = $conn->prepare("delete from php_db.Right_Answer  where Question_ID = :queid ");
 
@@ -138,16 +178,24 @@ try {
         ?>
         <br>
         <li style="color: #74cbe8">Difficulty:</li>
-        <li <?php echo $col ?>><?php echo $dif ?></li>
+        <li <?php echo $col ?>><?php echo $dif ?></li><br>
+
+        <li style="color: #74cbe8">Course/s</li>
+        <?php
+        foreach ($_POST['Lesson'] as $less){
+            echo '<li ', $green, ' >', $less, '</li>';
+        }
+        ?>
     </ul>
-    <?php
+
+        <?php
     echo '<button formaction="http://localhost/sphy140/project%20php/teacher/questions.php"><a style="color: white">See all the questions for the
             course:',$_SESSION['lesson'],'</a></button>';
 
     exit();
 
     }catch (PDOException $e){
-
+        echo $e->getMessage();
     echo 'Something bad happened';
     }
     }
@@ -171,6 +219,18 @@ try {
         for ($j = 0; $j < $Answers->rowCount(); $j++) {
 
             echo '<option style="color: white; vert" value="', $row[$j]['Answer'], '">', $row[$j]['Answer'], '</option>';
+        }
+        ?>
+    </select>
+
+    </select>
+    <label for="Lessons">Courses you wont the question to belong.</label>
+    <p style="color: #ff512f">For multiple choice please push ctrl + click or cmd+click</p>
+    <select type="text" name="Lesson[]" id="Lesson" required multiple>
+
+        <?php
+        for ($i = 0; $i < count($Lessons); $i++) {
+            echo '<option value="', $Lessons[$i]['Lesson_Name'], '">', $Lessons[$i]['Lesson_Name'], '</option>';
         }
         ?>
     </select>
