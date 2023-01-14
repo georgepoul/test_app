@@ -119,9 +119,9 @@ try {
 
         $idConf = $conn->prepare("select Question.Question_ID, Question, Difficulty_ID, Answer 
             from php_db.Question inner join php_db.Answer on Answer.Question_ID = Question.Question_ID 
-            where php_db.Question.Question = :question");
+            where php_db.Question.Question_ID = :id");
 
-        $idConf->bindParam(':question', $_SESSION['row'][$_SESSION['rowId']]['Question']);
+        $idConf->bindParam(':id', $_SESSION['qId']);
         $idConf->execute();
 
         $row3 = $idConf->fetchAll(PDO::FETCH_ASSOC);
