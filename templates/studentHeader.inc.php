@@ -9,7 +9,7 @@
 <body>
 <header container class="siteHeader">
     <div row>
-        <h1 column="4" class="log"><a href="teacher.php">Test Page</a></h1>
+        <h1 column="4" class="log"><a href="student.php">Test Page</a></h1>
         <nav column="8" class="nav">
             <ul>
                 <li><a href="testme.php">Test yourself</a></li>

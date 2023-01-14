@@ -9,7 +9,7 @@ if ($_SESSION['role'] == 'Teacher') {
     <html lang="en">
     <head>
         <title>Test Page</title>
-        <link rel="stylesheet" href="../css/template.css">
+        <link rel="stylesheet" href="../css/add.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link rel="stylesheet" href="../https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
@@ -36,6 +36,17 @@ if ($_SESSION['role'] == 'Teacher') {
             $idConf2->execute();
 
             $row2 = $idConf2->fetchAll(PDO::FETCH_ASSOC);
+
+            $idConf3 = $conn->prepare("select Lesson_Name 
+            from php_db.Lesson inner join php_db.Question_Lesson 
+            on Lesson.Lesson_ID = Question_Lesson.Lesson_ID
+            where php_db.Question_Lesson.Question_ID = :id");
+
+            $idConf3->bindParam(':id', $row[0]['Question_ID']);
+
+            $idConf3->execute();
+
+            $row3 = $idConf3->fetchAll(PDO::FETCH_ASSOC);
 
             $ans = null;
 
@@ -79,7 +90,7 @@ if ($_SESSION['role'] == 'Teacher') {
 
         <p style="text-align: left;color: #74cbe8">Question: <?php echo $row[0]['Question']?></p>
         <ul>
-            <li style="color: #74cbe8">Answers:</li><br>
+            <li style="color: #74cbe8;list-style-type: none">Answers:</li><br>
             <?php
             for ($i=0;$i< $idConf->rowCount();$i++){
                 $green = null;
@@ -91,8 +102,15 @@ if ($_SESSION['role'] == 'Teacher') {
             }
             ?>
             <br>
-            <li style="color: #74cbe8">Difficulty:</li>
+            <li style="color: #74cbe8;list-style-type: none">Difficulty:</li>
             <li <?php echo $col ?> > <?php  echo $dif ?></li>
+            <br>
+            <li style="color: #74cbe8;list-style-type: none">Course/s</li>
+            <?php
+            for ($i=0;$i<count($row3);$i++){
+                echo '<li>', $row3[$i]['Lesson_Name'], '</li>';
+            }
+            ?>
         </ul>
         <?php
         echo '<button><a href="questions.php" style="color: white">See all the questions for the

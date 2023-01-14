@@ -150,7 +150,7 @@ if ($_SESSION['role'] == 'Teacher') {
 
             <p style="text-align: left;color: #74cbe8">Question: <?php echo $_POST['question'] ?></p>
             <ul>
-                <li style="color: #74cbe8">Answers:</li>
+                <li style="color: #74cbe8;list-style-type: none">Answers:</li>
                 <?php
                 for ($i = 0; $i < count($Answers); $i++) {
                     $green = null;
@@ -163,13 +163,13 @@ if ($_SESSION['role'] == 'Teacher') {
                 }
                 ?>
                 <br>
-                <li style="color: #74cbe8">Difficulty:</li>
+                <li style="color: #74cbe8;list-style-type: none">Difficulty:</li>
                 <li <?php echo $col ?> > <?php echo $dif ?></li>
                 <br>
-                <li style="color: #74cbe8">Course/s</li>
+                <li style="color: #74cbe8;list-style-type: none">Course/s</li>
                 <?php
                 foreach ($_POST['Lesson'] as $less){
-                    echo '<li ', $green, ' >', $less, '</li>';
+                    echo '<li>', $less, '</li>';
                 }
                 ?>
             </ul>
