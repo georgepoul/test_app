@@ -1,6 +1,6 @@
 <?php
 
-$_SESSION = null;
+unset($_SESSION);
 
 session_destroy();
 
