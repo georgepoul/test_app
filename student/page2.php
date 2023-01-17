@@ -1,6 +1,7 @@
 <?php
 session_start();
 if ($_SESSION['role'] == 'Student') {
+if ($_SESSION['DoneTest'] == 0){
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $var = 'answer' . $i;
         if (isset($_POST[$var])) {
 
-            $_SESSION['input'][$var]=null;
+            $_SESSION['input'][$var] = null;
 
             for ($k = 0; $k < count($_POST[$var]); $k++) {
 
@@ -42,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             header("Location: page3.php");
 
-        }else if (isset($_POST['Pre'])){
+        } else if (isset($_POST['Pre'])) {
             header("Location: page1.php");
 
         }
@@ -65,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($_SESSION['Answers'][$k]['Question_ID'] == $_SESSION['questions'][4]['Question_ID']) {
 
-                if (isset($_SESSION['input']['answer5']) and in_array($_SESSION['Answers'][$k]['Answer'],$_SESSION['input']['answer5'])) {
+                if (isset($_SESSION['input']['answer5']) and in_array($_SESSION['Answers'][$k]['Answer'], $_SESSION['input']['answer5'])) {
                     $checked = 'checked';
                 }
 
@@ -88,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($_SESSION['Answers'][$k]['Question_ID'] == $_SESSION['questions'][5]['Question_ID']) {
 
-                if (isset($_SESSION['input']['answer6']) and in_array($_SESSION['Answers'][$k]['Answer'],$_SESSION['input']['answer6'])) {
+                if (isset($_SESSION['input']['answer6']) and in_array($_SESSION['Answers'][$k]['Answer'], $_SESSION['input']['answer6'])) {
                     $checked = 'checked';
                 }
 
@@ -111,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($_SESSION['Answers'][$k]['Question_ID'] == $_SESSION['questions'][6]['Question_ID']) {
 
-                if (isset($_SESSION['input']['answer7']) and in_array($_SESSION['Answers'][$k]['Answer'],$_SESSION['input']['answer7'])) {
+                if (isset($_SESSION['input']['answer7']) and in_array($_SESSION['Answers'][$k]['Answer'], $_SESSION['input']['answer7'])) {
                     $checked = 'checked';
                 }
 
@@ -134,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($_SESSION['Answers'][$k]['Question_ID'] == $_SESSION['questions'][7]['Question_ID']) {
 
-                if (isset($_SESSION['input']['answer8']) and in_array($_SESSION['Answers'][$k]['Answer'],$_SESSION['input']['answer8'])) {
+                if (isset($_SESSION['input']['answer8']) and in_array($_SESSION['Answers'][$k]['Answer'], $_SESSION['input']['answer8'])) {
                     $checked = 'checked';
                 }
 
@@ -153,7 +154,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </form>
 <?php
 
+} else {
 
+    echo 'You cant go here';
+}
 } else {
     echo '<h4>401, Unauthorized</h4>';
 }

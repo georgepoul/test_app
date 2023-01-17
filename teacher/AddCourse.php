@@ -35,10 +35,11 @@ if ($_SESSION['role'] == 'Teacher') {
             if (isset($_POST['course'])) {
 
                 try {
+                    $lesson = strip_tags($_POST['course']);
 
                     $updRA = $conn->prepare("insert into php_db.Lesson(Lesson_Name) value (:lesson)");
 
-                    $updRA->bindParam(':lesson', $_POST['course']);
+                    $updRA->bindParam(':lesson', $lesson);
 
                     $updRA->execute();
 
@@ -48,9 +49,9 @@ if ($_SESSION['role'] == 'Teacher') {
                     <h3>Your Course saved Successfully!</h3>
                     <p>Your Course is : <?php echo $_POST['course'] ?></p>
 
-                    <button formaction="http://localhost/sphy140/project%20php/teacher/AddCourse.php"><a style="color: white">Add a new Course</a></button><br>
+                    <button formaction="http://localhost:8080/sphy140/project%20php/teacher/AddCourse.php"><a style="color: white">Add a new Course</a></button><br>
 
-                    <button formaction="http://localhost/sphy140/project%20php/teacher/editCourses.php"><a style="color: white">See all the Courses.</a></button>
+                    <button formaction="http://localhost:8080/sphy140/project%20php/teacher/editCourses.php"><a style="color: white">See all the Courses.</a></button>
 
                     <?php
 

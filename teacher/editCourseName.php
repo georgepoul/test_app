@@ -55,9 +55,11 @@ if ($_SESSION['role'] == 'Teacher') {
 
                 try {
 
+                    $name = strip_tags($_POST['course']);
+
                     $updRA = $conn->prepare("update php_db.Lesson set Lesson_Name = :lesson where Lesson_ID = :id ");
 
-                    $updRA->bindParam(':lesson', $_POST['course']);
+                    $updRA->bindParam(':lesson', $name);
                     $updRA->bindParam(':id', $row[0]['Lesson_ID']);
 
                     $updRA->execute();
@@ -69,7 +71,7 @@ if ($_SESSION['role'] == 'Teacher') {
                     <p>Your Course is : <?php echo $_POST['course'] ?></p>
 
 
-                    <button formaction="http://localhost/sphy140/project%20php/teacher/editCourses.php"><a style="color: white">See all the Courses.</a></button>
+                    <button formaction="http://localhost:8080/sphy140/project%20php/teacher/editCourses.php"><a style="color: white">See all the Courses.</a></button>
 
                     <?php
 

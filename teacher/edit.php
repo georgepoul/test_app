@@ -76,10 +76,12 @@ if ($_SESSION['role'] == 'Teacher') {
 
             try {
                 if (isset($_POST['question'])) {
+                    $que = strip_tags($_POST['question']);
+
                     $updQue = $conn->prepare("update php_db.Question 
                                 set Question = :question, Difficulty_ID = :difficulty where Question_ID = :id");
 
-                    $updQue->bindParam(':question', $_POST['question']);
+                    $updQue->bindParam(':question', $que);
                     $updQue->bindParam(':difficulty', $_POST['difficulty']);
                     $updQue->bindParam(':id', $row[0]['id']);
 
@@ -89,7 +91,8 @@ if ($_SESSION['role'] == 'Teacher') {
 
                 if (isset($_POST['answer'])) {
 
-                    $answers = $_POST['answer'];
+
+
 
                     $updRA = $conn->prepare("delete from php_db.Answer where Question_ID = :id");
 
@@ -100,8 +103,9 @@ if ($_SESSION['role'] == 'Teacher') {
                     $AnswerId = $updRA->fetchAll(PDO::FETCH_ASSOC);
 
 
-                    for ($i = 0; $i < sizeof($answers); $i++) {
+                    for ($i = 0; $i < sizeof($_POST['answer']); $i++) {
 
+                        $answers[$i] = strip_tags($_POST['answer'][$i]);
 
                         $updRA = $conn->prepare("insert into php_db.Answer (Answer,Question_ID) values(:answer, :id) ");
 

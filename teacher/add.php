@@ -50,11 +50,12 @@ if ($_SESSION['role'] == 'Teacher') {
         <?php
         try {
 
+            $que=strip_tags($_POST['question']);
 
             $Que = $conn->prepare("insert into php_db.Question (Question, Difficulty_ID)
                 values (:question, :diff)");
 
-            $Que->bindParam(':question', $_POST['question']);
+            $Que->bindParam(':question', $que);
             $Que->bindParam(':diff', $_POST['difficulty']);
 
             $Que->execute();
@@ -103,14 +104,14 @@ if ($_SESSION['role'] == 'Teacher') {
 
                 $var = 'answer' . $i;
 
-                $Answers[$i-1] = $_POST[$var];
+                $Answers[$i-1] = strip_tags($_POST[$var]);
 
                 if (in_array($i, $Ranswers)) {
 
-                    $RanswersEnd[$i] = $_POST[$var];
+                    $RanswersEnd[$i] = strip_tags($_POST[$var]);
                     $RAns = $conn->prepare("insert into php_db.Right_Answer (Right_Answer, Question_ID) values (:Right, :que)");
 
-                    $RAns->bindParam(':Right', $_POST[$var]);
+                    $RAns->bindParam(':Right', $RanswersEnd[$i]);
                     $RAns->bindParam(':que', $QueId[0]['Question_ID']);
 
                     $RAns->execute();
@@ -118,7 +119,7 @@ if ($_SESSION['role'] == 'Teacher') {
 
                 $queAns = $conn->prepare("insert into php_db.Answer (Answer,Question_ID) values (:answer, :qid)");
 
-                $queAns->bindParam(':answer', $_POST[$var]);
+                $queAns->bindParam(':answer', $Answers[$i-1]);
                 $queAns->bindParam(':qid', $QueId[0]['Question_ID']);
 
                 $queAns->execute();
@@ -174,9 +175,9 @@ if ($_SESSION['role'] == 'Teacher') {
                 ?>
             </ul>
 
-            <button formaction="http://localhost/sphy140/project%20php/teacher/add.php"><a style="color: white">Add a new question</a></button><br>
+            <button formaction="http://localhost:8080/sphy140/project%20php/teacher/add.php"><a style="color: white">Add a new question</a></button><br>
 
-            <button formaction="http://localhost/sphy140/project%20php/teacher/questions.php"><a style="color: white">See all the questions for the
+            <button formaction="http://localhost:8080/sphy140/project%20php/teacher/questions.php"><a style="color: white">See all the questions for the
                     course: <?php echo $_SESSION['lesson'] ?></a></button>
             </form>
             <?php

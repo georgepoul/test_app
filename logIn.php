@@ -33,7 +33,7 @@ session_start();
         include('database/db_connection.php');
 
         try {
-            $log = $conn->prepare("select password, role  from php_db.user where username = :username");
+            $log = $conn->prepare("select password, role , user_id from php_db.user where username = :username");
             $log->bindParam(':username', $username);
             $log->execute();
 
@@ -43,6 +43,7 @@ session_start();
 
                 $_SESSION['username'] = $username;
                 $_SESSION['role'] = $row[0]['role'];
+                $_SESSION['user_id'] = $row[0]['user_id'];
                 $_SESSION['time'] = time();
 
                 if ($_SESSION['role'] == 'Teacher'){

@@ -17,6 +17,10 @@ if ($_SESSION['role'] == 'Student') {
 
 <?php
 
+$_SESSION['saved'] = 0;
+
+$_SESSION['DoneTest'] = 0;
+
 list($questions, $Answers, $RAnswers) = TestDB();
 
 $_SESSION['questions'] = $questions;
@@ -154,8 +158,17 @@ function TestDB()
             }
         }
 
-        unset($RAns);
-        unset($RAnswer);
+        $LId = $conn->prepare("select Lesson_ID from php_db.Lesson where Lesson_Name = :name");
+
+        $LId->bindParam(':name', $_SESSION['lesson']);
+
+        $LId->execute();
+
+        $LesId = $LId->fetchAll(PDO::FETCH_ASSOC);
+
+        unset($LId);
+        $_SESSION['LId'] = $LesId[0]['Lesson_ID'];
+        unset($LesId);
 
         return array($questions, $Answers, $RAnswers);
 

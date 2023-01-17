@@ -188,7 +188,7 @@ try {
     </ul>
 
         <?php
-    echo '<button formaction="http://localhost/sphy140/project%20php/teacher/questions.php"><a style="color: white">See all the questions for the
+    echo '<button formaction="http://localhost:8080/sphy140/project%20php/teacher/questions.php"><a style="color: white">See all the questions for the
             course:',$_SESSION['lesson'],'</a></button>';
 
     exit();
