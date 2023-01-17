@@ -108,7 +108,7 @@ function TestDB()
         $Answers = null;
         for ($i = 0; $i < count($questions); $i++) {
 
-            $Ans = $conn->prepare("select Answer , Question_ID from php_db.Answer where Question_ID = :id");
+            $Ans = $conn->prepare("select Answer , Question_ID from php_db.Answer where Question_ID = :id order by rand()");
 
             $Ans->bindParam(':id', $questions[$i]['Question_ID']);
 

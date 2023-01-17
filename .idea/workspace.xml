@@ -5,20 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0794ca85-47c4-4a3a-9b7f-b16da27b2f72" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0f119981-8bfc-4ee3-895e-1998924bba92.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0f119981-8bfc-4ee3-895e-1998924bba92.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/project php.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/project php.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logIn.php" beforeDir="false" afterPath="$PROJECT_DIR$/logIn.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/student/page1.php" beforeDir="false" afterPath="$PROJECT_DIR$/student/page1.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/student/page2.php" beforeDir="false" afterPath="$PROJECT_DIR$/student/page2.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/student/page3.php" beforeDir="false" afterPath="$PROJECT_DIR$/student/page3.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/student/results.php" beforeDir="false" afterPath="$PROJECT_DIR$/student/results.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/student/test.php" beforeDir="false" afterPath="$PROJECT_DIR$/student/test.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/AddCourse.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/AddCourse.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/add.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/add.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/editCourseName.php" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/editCourseName.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +87,7 @@
       <workItem from="1673950499772" duration="291000" />
       <workItem from="1673951843219" duration="616000" />
       <workItem from="1673952679444" duration="2601000" />
-      <workItem from="1673960420343" duration="880000" />
+      <workItem from="1673960420343" duration="3997000" />
     </task>
     <servers />
   </component>
