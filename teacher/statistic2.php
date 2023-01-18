@@ -10,7 +10,7 @@ include('../database/db_connection.php');
 <html lang="en">
 <head>
     <title> <?php echo $_SESSION['lesson'] ?> Test</title>
-    <link rel="stylesheet" href="../css/test.css">
+    <link rel="stylesheet" href="../css/question.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
 
@@ -163,7 +163,7 @@ try {
 
         var data = {
             labels: [<?php for ($i = 0; $i < sizeof($_SESSION['StatLes']); $i++) {
-                echo '"',$_SESSION['StatLes'][$i]['Lesson_Name'], ' Right", ','"',$_SESSION['StatLes'][$i]['Lesson_Name'], ' False','"';
+                echo '"', $_SESSION['StatLes'][$i]['Lesson_Name'], ' Right", ', '"', $_SESSION['StatLes'][$i]['Lesson_Name'], ' False', '"';
                 if ($i != sizeof($_SESSION['StatLes']) - 1) {
                     echo ', ';
                 }
@@ -201,12 +201,73 @@ try {
     <a href="statistics.php" style="color: white">
         <button style="width: 900px; margin-left: 160px; margin-top: 100px;">See other statistics</button>
     </a>
-    <?php
-    exit();
+<?php
+exit();
 
 
 } elseif ($_SESSION['stat'] == 'question') {
 
+$Eas = $conn->prepare("select Question_ID, Question from php_db.Question ");
+
+$Eas->execute();
+
+$_SESSION['AllQue'] = $Eas->fetchAll(PDO::FETCH_ASSOC);
+
+
+for ($i = 0; $i < count($_SESSION['AllQue']); $i++) {
+
+    $stm = $conn->prepare("select count(*) as sum from php_db.Statistics where Question_ID = :id and result = 1");
+
+    $stm->bindParam(':id', $_SESSION['AllQue'][$i]['Question_ID']);
+
+    $stm->execute();
+
+    $_SESSION['AllQueRight'][$i] = $stm->fetchAll(PDO::FETCH_ASSOC);
+
+
+    $stm = $conn->prepare("select count(*) as sum from php_db.Statistics where Question_ID = :id and result = 0");
+
+    $stm->bindParam(':id', $_SESSION['AllQue'][$i]['Question_ID']);
+
+    $stm->execute();
+
+    $_SESSION['AllQueFalse'][$i] = $stm->fetchAll(PDO::FETCH_ASSOC);
+}
+//echo '<pre>';
+//print_r($_SESSION);
+//echo '</pre>';
+
+?>
+
+    <table style="color: white">
+        <tr>
+            <th style="color: #74cbe8">Question</th>
+            <th style="color: #74cbe8">Answered Right (%)</th>
+        </tr>
+        <?php
+        for ($i = 0; $i < count($_SESSION['AllQue']); $i++) {
+
+            if (($_SESSION['AllQueRight'][$i][0]['sum'] + $_SESSION['AllQueFalse'][$i][0]['sum']) != 0) {
+                $sum = round((100 * $_SESSION['AllQueRight'][$i][0]['sum']) / ($_SESSION['AllQueRight'][$i][0]['sum'] + $_SESSION['AllQueFalse'][$i][0]['sum']));
+                $per = '%';
+            }else{
+                $sum = 'The question have not answers whet';
+                $per = null;
+            }
+            echo '<tr>';
+            echo '<th>',$_SESSION['AllQue'][$i]['Question'],'</th>';
+            echo '<th>',$sum,$per,'</th>';
+            echo '<tr>';
+        }
+
+        ?>
+    </table>
+
+    <a href="statistics.php" style="color: white">
+        <button style="width: 900px; margin-left: 160px; margin-top: 100px;">See other statistics</button>
+    </a>
+    <?php
+    exit();
 }
 
 ?>
