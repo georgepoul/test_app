@@ -30,7 +30,7 @@ if ($_SESSION['role'] == 'Teacher') {
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form method="post" action="">
+    <form method="post" action="" style="height: auto;margin-top: 100px">
 
 
         <p style="text-align: left">The Questions for the course <?php echo $_SESSION['lesson'] ?> are:</p>

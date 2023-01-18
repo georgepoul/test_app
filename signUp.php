@@ -20,7 +20,7 @@
 </div>
 
 
-<form method="post" style="height: 630px">
+<form method="post" style="height: auto">
 
     <?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {

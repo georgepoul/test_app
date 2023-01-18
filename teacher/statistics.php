@@ -22,7 +22,7 @@ if ($_SESSION['role'] == 'Teacher') {
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form method="post">
+    <form method="post" style="top: 400px">
         <label for="dif">You wont to see statistics by:</label>
         <select name="dif" id="dif" required>
             <option hidden disabled selected value="">Please choose an option</option>
