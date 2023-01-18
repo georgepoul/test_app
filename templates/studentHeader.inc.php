@@ -13,7 +13,7 @@
         <nav column="8" class="nav">
             <ul>
                 <li><a href="testme.php">Test yourself</a></li>
-                <li><a href="statistics.php">Statistics</a></li>
+                <li><a href="statisticStu.php">Statistics</a></li>
                 <li><a href="../logout.php">Log out</a></li>
             </ul>
         </nav>
